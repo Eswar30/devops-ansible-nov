@@ -1,0 +1,6 @@
+---
+# handlers file for devops-web
+    - name: Ensure httpd is restart
+      service:
+        name: apache2
+        state: restarted

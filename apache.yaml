@@ -1,0 +1,33 @@
+---
+- hosts: webservers
+  become: true
+  gather_facts: yes
+  vars:
+    teamName: "Great DevOps"
+  tasks:
+  - name: Install apache package
+    package:
+      name: apache2
+      state: present
+
+  - name: Ensure httpd is running
+    service:
+      name: apache2
+      state: started
+
+  - name: Update web content
+    template:
+      src: index.html.j2
+      dest: /var/www/html/index.html
+
+  - name: Update apache configuration
+    template:
+      src: ports.conf.j2
+      dest: /etc/apache2/ports.conf
+    notify: Ensure httpd is restart
+
+  handlers:
+    - name: Ensure httpd is restart
+      service:
+        name: apache2
+        state: restarted
